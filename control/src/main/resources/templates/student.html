@@ -12,29 +12,128 @@
         crossorigin="anonymous"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-    <div class="container">
-        <div style="text-align: center"><h3>Estudiantes</h3></div>
+<div class="row">
+    <form th:action="@{/estudiantes/exportar}" method="post" id="export">
+    <div class="col-sm-2 col-md-2 col-lg-2">
+        <div class="form-group">
+            <center>
+                <div class="drop-down-wrapper form-control" id="CboFormatos">
+                    <select name="type" id="typeDoc">
+                        <option value="">Seleccionar</option>
+                        <option value="json">JSON</option>
+                        <option value="csv">CSV</option>
+                        <option value="xml">XML</option>
+                    </select>
+                </div>
+            </center>
+        </div>
     </div>
-    <br>
-    <br>
-    <table class="table">
-        <thead>
-            <tr>
-                <td>ID</td>
-                <td>Nombre</td>
-                <td>SUR Nombre</td>
-                <td>Fecha Nac.</td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="estudiante : ${students}">
-                <td th:text="${estudiante.student_id}"></td>
-                <td th:text="${estudiante.name}"></td>
-                <td>ddd</td>
-                <td>ssss</td>
-            </tr>
-        </tbody>
-    </table>
+    <div class="col-sm-2 col-md-2 col-lg-2">
+        <div class="form-group">
+            <center>
+                <input type="hidden" id="headers" name="headers">
+                    <button id="BtnExportar" class="btn btn-primary">Exportar</button>
+            </center>
+        </div>
+    </div>
+    </form>
+    <div class="col-sm-4 col-md-4 col-lg-4">
+        <div class="form-group">
+            <center>
+                <form th:action="@{/estudiantes/exportjson}">
+                    <button class="btn btn-secondary">Exportar XML</button>
+                </form>
+            </center>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div style="text-align: center"><h3>Estudiantes</h3></div>
+</div>
+<br>
+<br>
+
+<table class="table">
+    <thead>
+    <tr>
+        <td><input type="checkbox" id="student_id" name="checks[]" value="student_id" checked></td>
+        <td><input type="checkbox" id="surname" name="checks[]" value="surname" checked></td>
+        <td><input type="checkbox" id="name" name="checks[]" value="name" checked></td>
+        <td><input type="checkbox" id="birthdate" name="checks[]" value="birthdate" checked></td>
+        <td><input type="checkbox" id="address1" name="checks[]" value="address1" checked></td>
+        <td><input type="checkbox" id="address2" name="checks[]" value="address2" checked></td>
+        <td><input type="checkbox" id="phone1" name="checks[]" value="phone1" checked></td>
+        <td><input type="checkbox" id="phone2" name="checks[]" value="phone2" checked></td>
+        <td><input type="checkbox" id="email" name="checks[]" value="email" checked></td>
+    </tr>
+    <tr>
+        <td>ID</td>
+        <td>Apellido</td>
+        <td>Nombre</td>
+        <td>Fecha de Nacimiento</td>
+        <td>Dirección 1</td>
+        <td>Dirección 2</td>
+        <td>Teléfono 1</td>
+        <td>Teléfono 2</td>
+        <td>Correo Electrónico</td>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="estudiante : ${students}">
+        <td th:text="${estudiante.student_id}"></td>
+        <td th:text="${estudiante.surname}"></td>
+        <td th:text="${estudiante.name}"></td>
+        <td th:text="${estudiante.birthdate}"></td>
+        <td  th:text="${estudiante.address1}"></td>
+        <td  th:text="${estudiante.address2}"></td>
+        <td  th:text="${estudiante.phone1}"></td>
+        <td  th:text="${estudiante.phone2}"></td>
+        <td  th:text="${estudiante.email}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+<script>
+    $("#BtnExportar").click(function(){
+        exportar();
+    });
+
+    function exportar(){
+        //$(".drop-down-wrapper select").val()
+
+        console.log($(".drop-down-wrapper select").val());
+
+
+        var arr = $('[name="checks[]"]:checked').map(function(){
+            return this.value;
+        }).get();
+
+        var str = arr.join(',');
+
+        console.log(str);
+        $("#headers").val(str);
+
+        var data={
+            header:JSON.stringify(arr),
+            type:$("#typeDoc").val()
+        }
+
+        $("#export").submit();
+
+        //alert(JSON.stringify(arr));
+       /* $.ajax({
+            type: "POST",
+            url: "/estudiantes/exportar",
+            data: JSON.stringify(data),
+            success: (data,text,hola)=>{
+                //location.reload();
+            },
+            contentType: "application/json"
+            //dataType:
+        });*/
+
+    }
+</script>
 </body>
 </html>

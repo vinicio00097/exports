@@ -4,11 +4,12 @@ import com.estudiantes.control.dao.IStudentDAO;
 import com.estudiantes.control.model.Student;
 import com.estudiantes.control.services.IStudent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.ArrayList;
+import java.awt.print.Pageable;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService implements IStudent {
@@ -38,7 +39,9 @@ public class StudentService implements IStudent {
 
     @Override
     public List<Student> getAll() {
-        return studentDAO.findAll();
+        //studentDAO.findAll()
+
+        return studentDAO.getAllByLimit();
     }
 
 }
